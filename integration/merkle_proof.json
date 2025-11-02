@@ -1,0 +1,74 @@
+{
+  "smt_root": "1063df1fe799c2d8369dbcf80c983dd9172f7e1077aa8b1492857038f976dbd1",
+  "verkle_root": "50fd0a2a92258d989df9eaa4e78393896668830bdb7b4b0142a9be7b9bce5766",
+  "leaves": [
+    "eb1d0a2ee4d1af3fbb5fc3652c823e45637022a685ab9ec7be078f559e148521",
+    "2f2e637c989afda7b82be7252ae3d8817f70e4ebc0ebd015834ed6c0e9abcc45",
+    "f75c2ec1cde6456dc176411e15e665b35b03774426a6d83490d9a3e430235126"
+  ],
+  "entries": [
+    {
+      "account": "custodian1",
+      "index": 0,
+      "leaf": "eb1d0a2ee4d1af3fbb5fc3652c823e45637022a685ab9ec7be078f559e148521",
+      "smt_proof": [
+        "2f2e637c989afda7b82be7252ae3d8817f70e4ebc0ebd015834ed6c0e9abcc45",
+        "245dd17e786b37d715750d4e64f10f56a8695a36c69004936ae7208d31b5744f"
+      ],
+      "verkle_proof": {
+        "inner_chunk": [
+          "eb1d0a2ee4d1af3fbb5fc3652c823e45637022a685ab9ec7be078f559e148521",
+          "2f2e637c989afda7b82be7252ae3d8817f70e4ebc0ebd015834ed6c0e9abcc45",
+          "f75c2ec1cde6456dc176411e15e665b35b03774426a6d83490d9a3e430235126"
+        ],
+        "inner_index": 0,
+        "outer_proof": [],
+        "chunk_commitment": "50fd0a2a92258d989df9eaa4e78393896668830bdb7b4b0142a9be7b9bce5766"
+      },
+      "smt_ok": true,
+      "verkle_ok": true
+    },
+    {
+      "account": "custodian2",
+      "index": 1,
+      "leaf": "2f2e637c989afda7b82be7252ae3d8817f70e4ebc0ebd015834ed6c0e9abcc45",
+      "smt_proof": [
+        "eb1d0a2ee4d1af3fbb5fc3652c823e45637022a685ab9ec7be078f559e148521",
+        "245dd17e786b37d715750d4e64f10f56a8695a36c69004936ae7208d31b5744f"
+      ],
+      "verkle_proof": {
+        "inner_chunk": [
+          "eb1d0a2ee4d1af3fbb5fc3652c823e45637022a685ab9ec7be078f559e148521",
+          "2f2e637c989afda7b82be7252ae3d8817f70e4ebc0ebd015834ed6c0e9abcc45",
+          "f75c2ec1cde6456dc176411e15e665b35b03774426a6d83490d9a3e430235126"
+        ],
+        "inner_index": 1,
+        "outer_proof": [],
+        "chunk_commitment": "50fd0a2a92258d989df9eaa4e78393896668830bdb7b4b0142a9be7b9bce5766"
+      },
+      "smt_ok": true,
+      "verkle_ok": true
+    },
+    {
+      "account": "custodian3",
+      "index": 2,
+      "leaf": "f75c2ec1cde6456dc176411e15e665b35b03774426a6d83490d9a3e430235126",
+      "smt_proof": [
+        "f75c2ec1cde6456dc176411e15e665b35b03774426a6d83490d9a3e430235126",
+        "65022610d8b1c0a473ce4a9b90491abb5f96acc7bdbd6b01e34b8274039c525a"
+      ],
+      "verkle_proof": {
+        "inner_chunk": [
+          "eb1d0a2ee4d1af3fbb5fc3652c823e45637022a685ab9ec7be078f559e148521",
+          "2f2e637c989afda7b82be7252ae3d8817f70e4ebc0ebd015834ed6c0e9abcc45",
+          "f75c2ec1cde6456dc176411e15e665b35b03774426a6d83490d9a3e430235126"
+        ],
+        "inner_index": 2,
+        "outer_proof": [],
+        "chunk_commitment": "50fd0a2a92258d989df9eaa4e78393896668830bdb7b4b0142a9be7b9bce5766"
+      },
+      "smt_ok": true,
+      "verkle_ok": true
+    }
+  ]
+}

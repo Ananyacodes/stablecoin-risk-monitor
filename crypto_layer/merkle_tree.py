@@ -2,9 +2,17 @@ import hashlib
 from typing import List, Tuple, Dict, Any
 
 
-def sha256(data: str) -> str:
-    """Return hex sha256 of the given string."""
-    return hashlib.sha256(data.encode()).hexdigest()
+def sha256_bytes(data: bytes) -> str:
+    """Return hex sha256 digest of the given bytes."""
+    return hashlib.sha256(data).hexdigest()
+
+
+def _hex_to_bytes(h: str) -> bytes:
+    return bytes.fromhex(h)
+
+
+def _bytes_to_hex(b: bytes) -> str:
+    return b.hex()
 
 
 # ------------------------------------------------------------------
@@ -25,8 +33,10 @@ def build_smt_levels(leaves: List[str]) -> List[List[str]]:
 
     Returns a list of levels where level 0 is leaves and last level is root.
     """
+    # leaves are expected to be hex-encoded sha256 digests (64 hex chars)
     if not leaves:
-        return [[sha256("")]]
+        # sha256 of empty bytes
+        return [[sha256_bytes(b"")]]
 
     size = _next_power_of_two(len(leaves))
     # pad by repeating last leaf (deterministic)
@@ -36,9 +46,11 @@ def build_smt_levels(leaves: List[str]) -> List[List[str]]:
         prev = levels[-1]
         nxt = []
         for i in range(0, len(prev), 2):
-            left = prev[i]
-            right = prev[i + 1]
-            nxt.append(sha256(left + right))
+            left_hex = prev[i]
+            right_hex = prev[i + 1]
+            left_b = _hex_to_bytes(left_hex)
+            right_b = _hex_to_bytes(right_hex)
+            nxt.append(sha256_bytes(left_b + right_b))
         levels.append(nxt)
     return levels
 
@@ -67,15 +79,16 @@ def get_smt_proof(leaves: List[str], index: int) -> List[str]:
 
 
 def verify_smt_proof(leaf_hash: str, proof: List[str], index: int, root: str) -> bool:
-    h = leaf_hash
+    # leaf_hash and proof entries are hex strings representing 32-byte digests
+    h_hex = leaf_hash
     idx = index
-    for sib in proof:
-        if idx % 2 == 0:
-            h = sha256(h + sib)
-        else:
-            h = sha256(sib + h)
+    for sib_hex in proof:
+        left_hex, right_hex = (h_hex, sib_hex) if idx % 2 == 0 else (sib_hex, h_hex)
+        left_b = _hex_to_bytes(left_hex)
+        right_b = _hex_to_bytes(right_hex)
+        h_hex = sha256_bytes(left_b + right_b)
         idx //= 2
-    return h == root
+    return h_hex == root
 
 
 # ------------------------------------------------------------------
@@ -98,9 +111,9 @@ def build_vector_commitments(leaves: List[str], chunk_size: int = 8) -> Tuple[Li
     chunks = [leaves[i : i + chunk_size] for i in range(0, len(leaves), chunk_size)]
     commitments = []
     for chunk in chunks:
-        # vector commitment = hash of concatenated element hashes
-        joined = "".join(chunk)
-        commitments.append(sha256(joined))
+        # vector commitment = hash of concatenated element bytes
+        joined_b = b"".join(_hex_to_bytes(l) for l in chunk)
+        commitments.append(sha256_bytes(joined_b))
 
     outer_levels = build_smt_levels(commitments)
     return commitments, outer_levels
@@ -148,17 +161,19 @@ def verify_verkle_proof(leaf_hash: str, proof_obj: Dict[str, Any], index: int, r
     # recompute chunk commitment
     inner = proof_obj.get("inner_chunk", [])
     inner_index = proof_obj.get("inner_index", 0)
-    recomputed_chunk = sha256("".join(inner))
+    # recompute chunk commitment by concatenating inner element bytes
+    joined_b = b"".join(_hex_to_bytes(h) for h in inner)
+    recomputed_chunk = sha256_bytes(joined_b)
     if recomputed_chunk != proof_obj.get("chunk_commitment"):
         return False
-    # verify outer proof
+    # verify outer proof (commitment path)
     h = recomputed_chunk
     idx = index // chunk_size
     for sib in proof_obj.get("outer_proof", []):
-        if idx % 2 == 0:
-            h = sha256(h + sib)
-        else:
-            h = sha256(sib + h)
+        left_hex, right_hex = (h, sib) if idx % 2 == 0 else (sib, h)
+        left_b = _hex_to_bytes(left_hex)
+        right_b = _hex_to_bytes(right_hex)
+        h = sha256_bytes(left_b + right_b)
         idx //= 2
     return h == root
 
