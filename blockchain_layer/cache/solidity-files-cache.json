@@ -43,8 +43,8 @@
       ]
     },
     "C:\\Users\\Ananya\\stablecoin-risk-monitor\\blockchain_layer\\contracts\\ProofOfReserves.sol": {
-      "lastModificationDate": 1759814129796,
-      "contentHash": "892f085f3dcdb7b9bcb90aa1da293215",
+      "lastModificationDate": 1762081094754,
+      "contentHash": "e6cf995cdd36d9a6cc9138e63af49d04",
       "sourceName": "contracts/ProofOfReserves.sol",
       "solcConfig": {
         "version": "0.8.20",
